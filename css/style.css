@@ -1,0 +1,316 @@
+/* ══════════════════════════════════════════════════════════════
+   MY WORKDAY — FLUID ANIMATIONS, MASCOT MOTIONS & MICRO-INTERACTIONS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Twinkling & Floating Stars ── */
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(15deg); filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.8)); }
+}
+.star-twinkle-1 { animation: starTwinkle 3s ease-in-out infinite; }
+.star-twinkle-2 { animation: starTwinkle 2.4s ease-in-out infinite 0.7s; }
+.star-twinkle-3 { animation: starTwinkle 3.6s ease-in-out infinite 1.2s; }
+.star-twinkle-4 { animation: starTwinkle 2.8s ease-in-out infinite 1.8s; }
+
+/* ── Gentle Idle Floating for Mascots ── */
+@keyframes floatGentleLeft {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+@keyframes floatGentleRight {
+  0%, 100% { transform: translateY(0) rotate(2deg); }
+  50% { transform: translateY(-10px) rotate(-1deg); }
+}
+.mascot-float-left {
+  animation: floatGentleLeft 4.2s ease-in-out infinite;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+.mascot-float-right {
+  animation: floatGentleRight 4.8s ease-in-out infinite 0.4s;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* ── Mascot Click & Hover Reactions ── */
+.mascot-interactive {
+  cursor: pointer;
+  user-select: none;
+}
+.mascot-interactive:hover {
+  transform: scale(1.08) translateY(-4px) !important;
+}
+.mascot-interactive:active {
+  transform: scale(0.92) translateY(2px) !important;
+}
+
+/* Eye pupil smooth tracking */
+.mascot-pupil {
+  transition: transform 0.08s ease-out;
+  will-change: transform;
+}
+
+.mascot-face {
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+/* ── Pill Mascots (Analytics Card) ── */
+.pill-mascot {
+  transform-origin: bottom center;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  cursor: pointer;
+}
+.pill-mascot:hover {
+  transform: scaleY(1.12) scaleX(0.94) translateY(-14px) !important;
+  filter: brightness(1.04) drop-shadow(0 8px 16px rgba(0,0,0,0.12));
+}
+.pill-mascot:active {
+  transform: scaleY(0.88) scaleX(1.1) translateY(4px) !important;
+}
+
+/* Idle breathing for pills */
+@keyframes pillBreathe1 {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  50% { transform: scaleY(1.04) translateY(-3px); }
+}
+@keyframes pillBreathe2 {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  50% { transform: scaleY(1.06) translateY(-5px); }
+}
+@keyframes pillBreathe3 {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  50% { transform: scaleY(1.03) translateY(-4px); }
+}
+.pill-mascot-1 { animation: pillBreathe1 3.8s ease-in-out infinite; }
+.pill-mascot-2 { animation: pillBreathe2 3.2s ease-in-out infinite 0.5s; }
+.pill-mascot-3 { animation: pillBreathe3 4.4s ease-in-out infinite 1s; }
+
+/* ── Flower Mascot Petals Spin ── */
+@keyframes petalIdle {
+  0%, 100% { transform: rotate(12deg) scale(1); }
+  50% { transform: rotate(16deg) scale(1.04); }
+}
+.flower-petals {
+  animation: petalIdle 6s ease-in-out infinite;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+}
+.flower-container:hover .flower-petals {
+  transform: rotate(50deg) scale(1.12);
+}
+
+/* ── Bento Card Hover 3D Tilt & Glow ── */
+.bento-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.25s ease;
+  will-change: transform, box-shadow;
+  position: relative;
+  overflow: hidden;
+}
+.bento-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+/* Sheen sweep on card hover */
+.bento-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  transform: translate(var(--mouse-x, 0px), var(--mouse-y, 0px));
+}
+.bento-card:hover::after {
+  opacity: 1;
+}
+
+/* ── Floating Pulse Action Buttons (+) ── */
+.action-plus-btn {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.action-plus-btn:hover {
+  transform: scale(1.18) rotate(90deg);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  background-color: #ffffff !important;
+}
+.action-plus-btn:active {
+  transform: scale(0.95);
+}
+
+/* ── Laptop Mockup Floating Animation ── */
+@keyframes laptopFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.laptop-float {
+  animation: laptopFloat 6s ease-in-out infinite;
+  transition: transform 0.4s ease;
+}
+.laptop-float:hover {
+  animation-play-state: paused;
+  transform: translateY(-12px) scale(1.01);
+}
+
+/* ── Cute Pop Heart / Confetti Particle on Click ── */
+.cute-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 20px;
+  animation: particlePop 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes particlePop {
+  0% { opacity: 1; transform: translate(0, 0) scale(0.6) rotate(0deg); }
+  50% { opacity: 1; transform: translate(var(--dx, 20px), var(--dy, -40px)) scale(1.3) rotate(15deg); }
+  100% { opacity: 0; transform: translate(var(--dx, 30px), var(--dy, -80px)) scale(0.8) rotate(30deg); }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   CARD DECK STACKING SYSTEM (DIRECT SIBLING STACK ON SCROLL)
+   - Ample 115vh scroll distance ensures all card info appears
+     before the next card slides up on top!
+   - Card 1 pins -> All info scrolls into view -> Card 2 slides UP on Card 1.
+   - Card 2 pins -> All info scrolls into view -> Card 3 slides UP on Card 2.
+   ══════════════════════════════════════════════════════════════ */
+.card-deck-container {
+  position: relative;
+  display: block;
+  padding-bottom: 0px;
+}
+
+.deck-card {
+  position: -webkit-sticky;
+  position: sticky;
+  border-radius: 2.25rem;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  /* Deep layered shadow so the top card clearly floats on top of the card below */
+  box-shadow: 0 -25px 50px -12px rgba(0, 0, 0, 0.2), 0 25px 60px -15px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem 1.25rem 1rem;
+  height: min(88vh, 760px);
+  margin-bottom: 115vh; /* 115vh provides ample scroll time for all info to appear! */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform-origin: top center;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, filter;
+}
+
+@media (min-width: 640px) {
+  .deck-card {
+    padding: 1.75rem 2rem 1.25rem;
+    height: min(88vh, 770px);
+    margin-bottom: 125vh;
+  }
+}
+
+/* Individual card sticky top and stacking order */
+.deck-card-1 { z-index: 10; top: 76px; }
+.deck-card-2 { z-index: 20; top: 88px; }
+.deck-card-3 { z-index: 30; top: 100px; }
+.deck-card-4 { z-index: 40; top: 112px; }
+.deck-card-5 { z-index: 50; top: 124px; margin-bottom: 40px !important; }
+
+/* Deck Card Header indicator */
+.deck-indicator {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.875rem;
+}
+.deck-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.deck-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #737373;
+  letter-spacing: 0.02em;
+}
+
+/* Viewport clipping window inside the card */
+.deck-card-viewport {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Content container inside the card */
+.deck-card-content {
+  position: relative;
+  width: 100%;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   POPPING BUTTON STYLES & INTERACTIVE CARDS
+   ══════════════════════════════════════════════════════════════ */
+button, .btn-pop, a[href*="dashboard"], .action-plus-btn {
+  cursor: pointer;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, filter 0.2s ease, background-color 0.2s ease !important;
+  will-change: transform, box-shadow;
+}
+
+button:hover, .btn-pop:hover, a[href*="dashboard"]:hover {
+  transform: translateY(-4px) scale(1.06) !important;
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.2), 0 6px 14px -4px rgba(0, 0, 0, 0.12) !important;
+  filter: brightness(1.04);
+}
+
+button:active, .btn-pop:active, a[href*="dashboard"]:active {
+  transform: translateY(0px) scale(0.96) !important;
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Plus action button distinct pop & rotate */
+.action-plus-btn {
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background-color 0.2s ease !important;
+}
+.action-plus-btn:hover {
+  transform: translateY(-3px) scale(1.24) rotate(90deg) !important;
+  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.24) !important;
+  background-color: #ffffff !important;
+}
+.action-plus-btn:active {
+  transform: scale(0.94) rotate(90deg) !important;
+}
+
+/* Clickable bento card launch cue */
+.bento-card-clickable {
+  cursor: pointer;
+}
+.bento-card-clickable:hover {
+  outline: 2px solid rgba(0, 0, 0, 0.08);
+  outline-offset: 2px;
+}
