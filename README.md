@@ -7,11 +7,12 @@
 A lightweight, zero-build, dual-perspective dashboard designed to kill ambiguity, organize daily priorities, and turn messy workdays into focused flow states.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-my--workday--portal.vercel.app-000000?style=flat-square&logo=vercel&logoColor=white)](https://my-workday-portal.vercel.app/)
 [![Vanilla JS](https://img.shields.io/badge/Stack-Vanilla%20HTML%20%2F%20CSS%20%2F%20JS-facc15?style=flat-square&labelColor=1c1917)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CDN-38bdf8?style=flat-square&labelColor=1c1917)](https://tailwindcss.com)
 [![Status](https://img.shields.io/badge/Type-Weekend%20Fun%20Project-emerald?style=flat-square&labelColor=1c1917)](#-built-for-fun)
 
-[**Explore Live Demo**](https://dishantjhava.github.io/My-Workday/) • [**Key Features**](#-what-it-actually-does) • [**Architecture**](#-under-the-hood) • [**Try Scenarios**](#-seed-data--scenario-switcher)
+[**🚀 Explore Live Demo**](https://my-workday-portal.vercel.app/) • [**Key Features**](#-what-it-actually-does) • [**Architecture**](#-under-the-hood) • [**Try Scenarios**](#-seed-data--scenario-switcher)
 
 ---
 
@@ -121,13 +122,20 @@ python -m http.server 8000
 
 ---
 
-## 🌐 Deploy It Yourself
+## 🌐 Live Production Deployment
 
-Want to host your own copy? You can deploy it for free in seconds:
+The project is hosted and running live at:
+👉 **[https://my-workday-portal.vercel.app/](https://my-workday-portal.vercel.app/)**
 
+---
+
+## 🛠️ Deploy Your Own Copy
+
+Want to host your own version? You can deploy it for free in seconds:
+
+- **Vercel**: Import this repo directly into [vercel.com](https://vercel.com) or run `npx vercel`.
 - **GitHub Pages**: Go to `Settings` ➔ `Pages` ➔ Select `main` branch ➔ Save.
 - **Netlify Drop**: Drag and drop the `My-Workday` folder onto [app.netlify.com/drop](https://app.netlify.com/drop).
-- **Vercel**: Run `npx vercel` inside the folder.
 
 ---
 
