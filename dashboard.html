@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Workday — Daily Clarity, Focus & Team Alignment</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fefce8',
+              100: '#fef9c3',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #faf8f5;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #1c1917;
+    }
+    .card-shadow {
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    }
+    .card-shadow-lg {
+      box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.09), 0 6px 16px -2px rgba(0, 0, 0, 0.04);
+    }
+    button, .interactive-card {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-200">
+
+  <!-- ══════════════════════════════════════════════════════════════
+       FLOATING TOAST NOTIFICATION CONTAINER (Professional UX)
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       GLOBAL NAVIGATION BAR WITH ROLE VIEW SWITCHER
+       ══════════════════════════════════════════════════════════════ -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-200/80 px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 transition-all">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
+      
+      <!-- Brand & Permanent Landing Page Logo -->
+      <div class="flex items-center gap-2 sm:gap-6 shrink-0">
+        <a href="index.html" class="flex items-center gap-2 sm:gap-2.5 group shrink-0" title="Return to Landing Page">
+          <svg class="w-6 h-6 sm:w-7 sm:h-7 text-neutral-900 group-hover:scale-105 transition-transform shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <rect x="2" y="2" width="9" height="9" rx="2"/>
+            <rect x="13" y="2" width="9" height="9" rx="2"/>
+            <rect x="2" y="13" width="9" height="9" rx="2"/>
+            <rect x="13" y="13" width="9" height="9" rx="2" opacity=".4"/>
+          </svg>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <span class="text-base sm:text-lg font-extrabold text-neutral-950 tracking-tight leading-none">My Workday</span>
+              <span class="hidden md:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200/60">Demo</span>
+            </div>
+            <span class="text-[11px] text-amber-800 font-semibold hover:underline hidden sm:flex items-center gap-0.5 mt-0.5">← Back to Home</span>
+          </div>
+        </a>
+
+        <!-- Problem Statement Solution: Perspective Switcher with Responsive Mobile Labels -->
+        <div class="inline-flex p-0.5 sm:p-1 bg-neutral-100 rounded-full border border-neutral-200/70 text-xs font-bold shadow-inner shrink-0">
+          <button id="view-tab-employee" onclick="switchPerspective('employee')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white text-neutral-950 shadow-xs flex items-center gap-1.5 transition-all text-[11px] sm:text-xs">
+            <svg class="w-3.5 h-3.5 text-neutral-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="hidden sm:inline">Employee Workspace</span>
+            <span class="sm:hidden">Workspace</span>
+          </button>
+          <button id="view-tab-manager" onclick="switchPerspective('manager')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-neutral-600 hover:text-neutral-900 flex items-center gap-1.5 transition-all text-[11px] sm:text-xs">
+            <svg class="w-3.5 h-3.5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span class="hidden sm:inline">Manager Overview</span>
+            <span class="sm:hidden">Manager</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Info & Actions -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <!-- 1:1 Sync Countdown badge (Hidden on mobile/tablet to avoid clutter) -->
+        <div class="hidden xl:flex items-center gap-2 px-3.5 py-1.5 bg-amber-50 border border-amber-200/80 rounded-full text-xs text-amber-950 font-semibold">
+          <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+          <span>Next 1:1 with Alex: <strong>Today, 3:30 PM</strong></span>
+        </div>
+
+        <button onclick="openSeedDataModal()" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-bold text-xs flex items-center gap-1.5 transition-all shrink-0 border border-neutral-200 shadow-2xs" title="Switch or customize seed data scenarios">
+          <svg class="w-3.5 h-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+          <span class="hidden sm:inline">Seed Data</span>
+        </button>
+        <button onclick="openNewTaskModal()" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-neutral-950 font-bold text-xs flex items-center gap-1 shadow-sm hover:shadow transition-all shrink-0">
+          <span class="text-base leading-none font-black">+</span>
+          <span class="hidden xs:inline sm:inline">New Task</span>
+          <span class="xs:hidden sm:hidden">Task</span>
+        </button>
+
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center font-bold text-amber-900 text-xs shadow-2xs shrink-0" id="active-user-avatar" title="Anna Mercer">
+          AM
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MAIN CONTENT CONTAINER
+       ══════════════════════════════════════════════════════════════ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8">
+
+    <!-- ────────────────────────────────────────────────────────────
+         VIEW 1: EMPLOYEE VIEW (Anna Mercer)
+         ──────────────────────────────────────────────────────────── -->
+    <div id="view-employee-container" class="space-y-8">
+      
+      <!-- Ambient Welcome Banner -->
+      <section class="bg-gradient-to-r from-amber-500/10 via-amber-100/30 to-amber-500/5 border border-amber-200/70 rounded-3xl p-6 sm:p-7 card-shadow">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-amber-400 flex items-center justify-center shadow-sm shrink-0 border border-amber-300">
+              <svg class="w-7 h-7 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight">Good morning, Anna!</h1>
+                <span class="px-2.5 py-0.5 rounded-full bg-white text-neutral-700 text-xs font-semibold border border-neutral-200/80 shadow-2xs">
+                  Wednesday, Oct 23 · Stockholm (Remote)
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm text-neutral-600 mt-1 font-medium flex items-center gap-2">
+                <span><strong class="text-neutral-900" id="header-critical-count">2 critical priorities</strong> today</span>
+                <span>·</span>
+                <span>Next 1:1 with Alex at <strong>3:30 PM</strong></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Employee Vibe / State Pills with Crisp Line Icons -->
+          <div class="flex items-center gap-2 bg-white/80 backdrop-blur-xs p-1.5 rounded-2xl border border-neutral-200/70 self-start md:self-auto shrink-0 shadow-2xs">
+            <span class="text-xs font-bold text-neutral-500 px-2">Workday Vibe:</span>
+            <button onclick="setMood(this, 'focused')" class="mood-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-neutral-950 shadow-xs flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              <span>Focused</span>
+            </button>
+            <button onclick="setMood(this, 'great')" class="mood-pill px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 hover:bg-neutral-100 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>
+              <span>Flow State</span>
+            </button>
+            <button onclick="setMood(this, 'coffee')" class="mood-pill px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 hover:bg-neutral-100 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+              <span>Have doubts</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Problem Statement Highlight: Core 3-Column Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- ════════════════════════════════════════════════════════
+             LEFT COLUMN (4 cols):
+             COMMUNICATION & DOUBT RESOLUTION WITH MANAGER (ALEX RIVERA)
+             ════════════════════════════════════════════════════════ -->
+        <div class="lg:col-span-4 space-y-6">
+
+          <!-- Card 1: 1:1 Sync & Live Doubts Bridge -->
+          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-neutral-200/80 card-shadow space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-neutral-100">
+              <div class="flex items-center gap-2.5">
+                <span class="p-2 rounded-xl bg-amber-100 text-amber-800">
+                  <svg class="w-4 h-4 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m11 17 2 2a1 1 0 0 0 1.4 0l6.6-6.6a2 2 0 0 0 0-2.8l-1.6-1.6a2 2 0 0 0-2.8 0L14 10.6"></path><path d="m13 7-2-2a1 1 0 0 0-1.4 0L3 11.6a2 2 0 0 0 0 2.8l1.6 1.6a2 2 0 0 0 2.8 0L10 13.4"></path></svg>
+                </span>
+                <div>
+                  <h2 class="text-sm font-extrabold text-neutral-900">Manager 1:1 Alignment</h2>
+                  <p class="text-xs text-neutral-500">Alex Rivera · Eng Lead</p>
+                </div>
+              </div>
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">
+                3:30 PM Today
+              </span>
+            </div>
+
+            <!-- Compact, Scannable Doubts / Agenda List -->
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-neutral-700">Agenda &amp; Clarified Doubts</span>
+                <span class="text-neutral-400 font-medium"><span id="doubts-count-label">2</span> items</span>
+              </div>
+
+              <!-- Streamlined feed -->
+              <div id="doubts-feed-list" class="space-y-2 max-h-56 overflow-y-auto pr-1 text-xs no-scrollbar">
+                <!-- Injected dynamically with clean, compact items -->
+              </div>
+
+              <!-- Quick Ask Input (Minimal & Clean) -->
+              <div class="pt-2 border-t border-neutral-100">
+                <div class="flex gap-2">
+                  <input id="quick-doubt-input" type="text" placeholder="Quick question for Alex..." class="flex-1 px-3 py-2 text-xs rounded-xl bg-neutral-100 border border-neutral-200 focus:outline-hidden focus:border-amber-400 text-neutral-800">
+                  <button onclick="submitQuickDoubt()" class="px-3.5 py-2 bg-amber-400 hover:bg-amber-500 text-neutral-950 rounded-xl text-xs font-bold shrink-0">
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Team Squad Sync (Interactive with inspect on click) -->
+          <div class="bg-white rounded-3xl p-6 border border-neutral-200/80 card-shadow space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-extrabold text-neutral-900 flex items-center gap-2">
+                <svg class="w-4 h-4 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>Squad Current Focus</span>
+              </h3>
+              <span class="text-[11px] text-neutral-400 font-medium">Click to inspect</span>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+              <!-- Alex Chen -->
+              <div onclick="inspectTeammate('Alex Chen', 'Backend Engineer', 'OAuth Auth0 Integration', 'Blocked on Spec: Waiting for mobile authorization code specification.', 'blocked')" class="cursor-pointer flex items-center justify-between p-2.5 rounded-xl bg-neutral-50 hover:bg-neutral-100 border border-neutral-100 transition-all">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-800 font-bold flex items-center justify-center text-[10px]">AC</div>
+                  <div>
+                    <span class="font-bold text-neutral-900 block">Alex Chen</span>
+                    <span class="text-[10px] text-neutral-500">Backend API Auth</span>
+                  </div>
+                </div>
+                <span id="squad-badge-alex" class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold text-[10px]">Blocked on Spec</span>
+              </div>
+
+              <!-- Maya Patel -->
+              <div onclick="inspectTeammate('Maya Patel', 'Product Designer', 'Design System Tokens v2', 'Finalizing high-contrast accessible switch states in Figma.', 'ongoing')" class="cursor-pointer flex items-center justify-between p-2.5 rounded-xl bg-neutral-50 hover:bg-neutral-100 border border-neutral-100 transition-all">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-[10px]">MP</div>
+                  <div>
+                    <span class="font-bold text-neutral-900 block">Maya Patel</span>
+                    <span class="text-[10px] text-neutral-500">Product Design</span>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]">Reviewing Tokens</span>
+              </div>
+
+              <!-- Raj Sharma -->
+              <div onclick="inspectTeammate('Raj Sharma', 'DevOps Engineer', 'Staging Cluster Migration', 'Staging deployment verified. Zero regressions in auth logs.', 'completed')" class="cursor-pointer flex items-center justify-between p-2.5 rounded-xl bg-neutral-50 hover:bg-neutral-100 border border-neutral-100 transition-all">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-[10px]">RS</div>
+                  <div>
+                    <span class="font-bold text-neutral-900 block">Raj Sharma</span>
+                    <span class="text-[10px] text-neutral-500">DevOps</span>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]">Staging Healthy</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════
+             CENTER COLUMN (8 cols):
+             DAILY PRIORITIES, EXPLICIT OUTCOMES, DEADLINES & 3-STATE TRACKING
+             ════════════════════════════════════════════════════════ -->
+        <div class="lg:col-span-8 space-y-6">
+
+          <!-- Top Status Bar & Metric Gauges -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
+            <!-- Metric 1: 3-State Task Breakdown -->
+            <div class="bg-white rounded-3xl p-5 border border-neutral-200/80 card-shadow space-y-2">
+              <span class="text-xs font-bold text-neutral-500 uppercase tracking-wider">Task State Breakdown</span>
+              <div class="flex items-center justify-between pt-1">
+                <div>
+                  <span class="text-2xl font-extrabold text-neutral-900" id="stat-ongoing-count">3</span>
+                  <span class="text-xs text-amber-800 font-bold block">Ongoing Tasks</span>
+                </div>
+                <div class="text-right text-xs text-neutral-500 font-medium space-y-0.5">
+                  <div><strong id="stat-pending-count" class="text-neutral-700">1</strong> Pending</div>
+                  <div><strong id="stat-completed-count" class="text-emerald-700">2</strong> Completed</div>
+                </div>
+              </div>
+              <div class="w-full h-2 rounded-full bg-neutral-100 flex overflow-hidden">
+                <div id="bar-completed" class="bg-emerald-500 transition-all duration-500" style="width: 33%"></div>
+                <div id="bar-ongoing" class="bg-amber-400 transition-all duration-500" style="width: 50%"></div>
+                <div id="bar-pending" class="bg-neutral-300 transition-all duration-500" style="width: 17%"></div>
+              </div>
+            </div>
+
+            <!-- Metric 2: Workday Rhythm Circle -->
+            <div class="bg-white rounded-3xl p-5 border border-neutral-200/80 card-shadow flex items-center gap-4">
+              <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
+                <svg class="w-14 h-14 -rotate-90 transform" viewBox="0 0 36 36">
+                  <path class="text-neutral-100" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                  <path id="circle-progress" class="text-amber-500 transition-all duration-500" stroke-dasharray="65, 100" stroke-linecap="round" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <span id="circle-percent-label" class="absolute text-xs font-black text-neutral-900">65%</span>
+              </div>
+              <div>
+                <span class="text-xs font-bold text-neutral-500 uppercase tracking-wider block">Day Progress</span>
+                <span class="text-sm font-extrabold text-neutral-900 leading-tight block mt-0.5" id="rhythm-status-label">On Track for 3:30 Sync</span>
+                <span class="text-[11px] text-neutral-500 font-medium">3.5 hrs focused cadence</span>
+              </div>
+            </div>
+
+            <!-- Metric 3: Critical Priority Deadline Watch -->
+            <div class="bg-amber-50 border border-amber-200/80 rounded-3xl p-5 card-shadow space-y-1">
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
+                Next Deadline
+              </span>
+              <div class="text-sm font-extrabold text-neutral-950 pt-1 leading-snug">
+                Finalize OKR Deck
+              </div>
+              <p class="text-xs text-amber-900/80 font-medium">
+                Due at <strong>2:30 PM</strong> (in 1h 45m)
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Problem Solution: Daily Focus & Task Clarity List -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-neutral-200/80 card-shadow space-y-6">
+            
+            <!-- Header with Search & 3-State Filter Tabs -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-100">
+              <div>
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                  <h2 class="text-lg font-extrabold text-neutral-950 tracking-tight">Daily Focus &amp; Priorities</h2>
+                </div>
+                <p class="text-xs text-neutral-500 font-medium mt-0.5">
+                  Tasks clearly prioritized with explicit instructions &amp; expected outcomes.
+                </p>
+              </div>
+
+              <!-- Interactive Search & 3-State Filter Switcher -->
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="relative">
+                  <input id="task-search-input" oninput="handleSearchTasks(this.value)" type="text" placeholder="Search tasks..." class="pl-8 pr-3 py-1.5 text-xs rounded-xl bg-neutral-100 border border-neutral-200 focus:outline-hidden focus:border-amber-400 text-neutral-800 w-36 sm:w-44 font-medium">
+                  <svg class="w-3.5 h-3.5 text-neutral-400 absolute left-2.5 top-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
+
+                <div class="inline-flex p-1 bg-neutral-100 rounded-2xl border border-neutral-200/70 text-xs font-bold">
+                  <button id="filter-all" onclick="filterTaskState('all')" class="px-3 py-1.5 rounded-xl bg-white text-neutral-950 shadow-2xs transition-all">
+                    All (<span id="count-filter-all">6</span>)
+                  </button>
+                  <button id="filter-ongoing" onclick="filterTaskState('ongoing')" class="px-3 py-1.5 rounded-xl text-neutral-600 hover:text-neutral-950 flex items-center gap-1.5 transition-all">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                    <span>Ongoing</span> (<span id="count-filter-ongoing">3</span>)
+                  </button>
+                  <button id="filter-pending" onclick="filterTaskState('pending')" class="px-3 py-1.5 rounded-xl text-neutral-600 hover:text-neutral-950 flex items-center gap-1.5 transition-all">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+                    <span>Pending</span> (<span id="count-filter-pending">1</span>)
+                  </button>
+                  <button id="filter-completed" onclick="filterTaskState('completed')" class="px-3 py-1.5 rounded-xl text-neutral-600 hover:text-neutral-950 flex items-center gap-1.5 transition-all">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <span>Done</span> (<span id="count-filter-completed">2</span>)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task Cards Container -->
+            <div id="tasks-container" class="space-y-4">
+              <!-- Dynamically populated tasks -->
+            </div>
+
+            <!-- Quick Add Focus Item with Priority Preset -->
+            <div class="pt-4 border-t border-neutral-100">
+              <form onsubmit="handleQuickAddTask(event)" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div class="relative flex-1">
+                  <input id="quick-task-title" type="text" placeholder="+ Add a quick focus item for today (e.g. Write unit test for login)..." class="w-full px-4 py-3 text-xs sm:text-sm rounded-2xl bg-neutral-50 border border-neutral-200 focus:outline-hidden focus:border-amber-400 text-neutral-900 font-medium placeholder:text-neutral-400 transition-colors">
+                </div>
+                <div class="flex items-center gap-2">
+                  <select id="quick-task-priority" class="px-3 py-3 text-xs rounded-2xl bg-neutral-100 border border-neutral-200 font-bold text-neutral-800">
+                    <option value="P1 · Critical">P1 Critical</option>
+                    <option value="P2 · Essential" selected>P2 Essential</option>
+                    <option value="P3 · Low">P3 Low</option>
+                  </select>
+                  <button type="submit" class="px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-500 text-neutral-950 font-bold text-xs sm:text-sm shrink-0 shadow-xs transition-all">
+                    Add Task
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────────────────────────────
+         VIEW 2: MANAGER OVERVIEW (Alex Rivera's Cockpit)
+         ──────────────────────────────────────────────────────────── -->
+    <div id="view-manager-container" class="hidden space-y-8">
+      
+      <!-- Manager Welcome Banner -->
+      <section class="bg-gradient-to-r from-amber-500/10 via-amber-100/30 to-amber-500/5 border border-amber-200/70 rounded-3xl p-6 sm:p-7 card-shadow">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-amber-400 text-neutral-950 flex items-center justify-center shadow-sm shrink-0 border border-amber-300">
+              <svg class="w-7 h-7 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight">Manager Overview — Alex Rivera</h1>
+                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold border border-amber-200">
+                  Engineering Lead &amp; Mentor
+                </span>
+              </div>
+              <p class="text-sm text-neutral-600 mt-1 font-medium">
+                Real-time visibility into squad health, task deliverables, blockers, and doubt resolution.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="px-4 py-2 bg-white rounded-2xl border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">
+              Direct Reports: <strong>4 Engineers</strong>
+            </div>
+            <div class="px-4 py-2 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs font-bold text-emerald-800 shadow-2xs flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              Squad Velocity: <strong id="squad-velocity-label">88% On Track</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manager Grid: Team Cards + Doubts Resolution Inbox -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left 7 Cols: Team Member Progress Overview -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="bg-white rounded-3xl p-6 border border-neutral-200/80 card-shadow space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-neutral-100">
+              <div>
+                <h2 class="text-base font-extrabold text-neutral-950">Direct Reports Daily Progress</h2>
+                <p class="text-xs text-neutral-500 font-medium">Click "Inspect Tasks" on any team member to review and approve deliverables.</p>
+              </div>
+              <span class="text-xs font-bold text-neutral-500">Live Sync</span>
+            </div>
+
+            <!-- Employee 1: Anna Mercer (Active Focus) -->
+            <div class="p-5 rounded-2xl bg-amber-50/60 border-2 border-amber-300/80 space-y-4 transition-all">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-amber-400 text-neutral-950 font-bold flex items-center justify-center text-sm shadow-2xs">
+                    AM
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-sm font-extrabold text-neutral-900">Anna Mercer</h3>
+                      <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">On Track</span>
+                    </div>
+                    <p class="text-xs text-neutral-500 font-medium">Senior Frontend Engineer · 1:1 Scheduled Today 3:30 PM</p>
+                  </div>
+                </div>
+                <button onclick="openEmployeeDetailModal('Anna Mercer', 'Senior Frontend Engineer')" class="text-xs font-bold text-amber-900 bg-amber-200/80 hover:bg-amber-300 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1">
+                  <span>Inspect Tasks</span>
+                  <span>→</span>
+                </button>
+              </div>
+
+              <!-- Anna's Live Task Progress Bars -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span class="text-neutral-600">Daily Task Completion (Anna)</span>
+                  <span class="text-neutral-900"><span id="mgr-anna-completed">2</span> of 6 Completed · <span id="mgr-anna-ongoing">3</span> Ongoing</span>
+                </div>
+                <div class="w-full h-2.5 rounded-full bg-neutral-200 overflow-hidden flex">
+                  <div id="mgr-bar-completed" class="bg-emerald-500 h-full transition-all duration-500" style="width: 33%"></div>
+                  <div id="mgr-bar-ongoing" class="bg-amber-400 h-full transition-all duration-500" style="width: 50%"></div>
+                  <div id="mgr-bar-pending" class="bg-neutral-300 h-full transition-all duration-500" style="width: 17%"></div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-xs pt-1 border-t border-amber-200/60 text-neutral-600">
+                <span>Next Deadline: <strong>OKR Deck (2:30 PM)</strong></span>
+                <span class="text-amber-900 font-bold">1 Clarified Doubt Ready for 1:1</span>
+              </div>
+            </div>
+
+            <!-- Employee 2: Alex Chen (Blocked / Unblockable) -->
+            <div id="mgr-alex-card" class="p-5 rounded-2xl bg-white border border-neutral-200/80 space-y-4 hover:border-neutral-300 transition-all">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 font-bold flex items-center justify-center text-sm">
+                    AC
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-sm font-extrabold text-neutral-900">Alex Chen</h3>
+                      <span id="mgr-alex-status-tag" class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-extrabold">⚠️ Blocked on API Spec</span>
+                    </div>
+                    <p class="text-xs text-neutral-500 font-medium">Backend Engineer · OAuth Auth0 Integration</p>
+                  </div>
+                </div>
+                <button id="mgr-alex-unblock-btn" onclick="openUnblockModal('Alex Chen', 'API Spec')" class="text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1 shadow-2xs">
+                  <span>⚡ Unblock Now</span>
+                </button>
+              </div>
+              <div class="w-full h-2 rounded-full bg-neutral-100 overflow-hidden flex">
+                <div id="mgr-alex-bar-done" class="bg-emerald-500 h-full transition-all" style="width: 25%"></div>
+                <div id="mgr-alex-bar-blocked" class="bg-rose-400 h-full transition-all" style="width: 75%"></div>
+              </div>
+            </div>
+
+            <!-- Employee 3: Maya Patel (On Track) -->
+            <div class="p-5 rounded-2xl bg-white border border-neutral-200/80 space-y-4 hover:border-neutral-300 transition-all">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-sm">
+                    MP
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-sm font-extrabold text-neutral-900">Maya Patel</h3>
+                      <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">On Track</span>
+                    </div>
+                    <p class="text-xs text-neutral-500 font-medium">Product Designer · Design System Tokens v2</p>
+                  </div>
+                </div>
+                <button onclick="openEmployeeDetailModal('Maya Patel', 'Product Designer')" class="text-xs font-bold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 px-3.5 py-1.5 rounded-xl transition-all">
+                  Inspect Tasks →
+                </button>
+              </div>
+              <div class="w-full h-2 rounded-full bg-neutral-100 overflow-hidden flex">
+                <div class="bg-emerald-500 h-full" style="width: 80%"></div>
+                <div class="bg-amber-400 h-full" style="width: 20%"></div>
+              </div>
+            </div>
+
+            <!-- Employee 4: Raj Sharma (On Track) -->
+            <div class="p-5 rounded-2xl bg-white border border-neutral-200/80 space-y-4 hover:border-neutral-300 transition-all">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 font-bold flex items-center justify-center text-sm">
+                    RS
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-sm font-extrabold text-neutral-900">Raj Sharma</h3>
+                      <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">On Track</span>
+                    </div>
+                    <p class="text-xs text-neutral-500 font-medium">DevOps Engineer · Staging Cluster Migration</p>
+                  </div>
+                </div>
+                <button onclick="openEmployeeDetailModal('Raj Sharma', 'DevOps Engineer')" class="text-xs font-bold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 px-3.5 py-1.5 rounded-xl transition-all">
+                  Inspect Tasks →
+                </button>
+              </div>
+              <div class="w-full h-2 rounded-full bg-neutral-100 overflow-hidden flex">
+                <div class="bg-emerald-500 h-full" style="width: 100%"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Doubts & Clarification Requests Inbox -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="bg-white rounded-3xl p-6 border border-neutral-200/80 card-shadow space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-neutral-100">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+                </span>
+                <div>
+                  <h2 class="text-base font-extrabold text-neutral-950">Doubts &amp; Clarification Inbox</h2>
+                  <p class="text-xs text-neutral-500 font-medium">Timely responses keep employees moving.</p>
+                </div>
+              </div>
+              <span id="mgr-inbox-counter" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">1 Urgent</span>
+            </div>
+
+            <!-- Doubts Resolution List -->
+            <div class="space-y-4 text-xs">
+              
+              <!-- Item 1 from Anna (Resolved) -->
+              <div class="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-neutral-900 flex items-center gap-1.5">
+                    <span class="w-6 h-6 rounded-full bg-amber-400 text-neutral-950 text-[10px] font-bold flex items-center justify-center">AM</span>
+                    Anna Mercer
+                  </span>
+                  <span class="text-[10px] text-neutral-400 font-medium">18m ago · OKR Deck</span>
+                </div>
+                <p class="text-neutral-700 bg-white p-2.5 rounded-xl border border-neutral-200/80">
+                  "PDF format or live Figma deck for Q3 design tokens?"
+                </p>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded-md text-[10px]">Answered</span>
+                  <span class="text-neutral-500 text-[11px]">Advised to use live Figma deck.</span>
+                </div>
+              </div>
+
+              <!-- Item 2 from Alex Chen (Pending Resolution) -->
+              <div id="alex-doubt-card" class="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-neutral-950 flex items-center gap-1.5">
+                    <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-900 text-[10px] font-bold flex items-center justify-center">AC</span>
+                    Alex Chen
+                  </span>
+                  <span id="alex-doubt-badge" class="text-[10px] text-rose-700 font-bold">Needs Answer · API Spec</span>
+                </div>
+                <p class="text-neutral-800 bg-white p-2.5 rounded-xl border border-neutral-200">
+                  "Do we require PKCE auth flow on mobile clients or standard authorization code flow?"
+                </p>
+                <div class="flex gap-2">
+                  <input id="alex-reply-input" type="text" placeholder="Provide quick guidance..." value="Use standard authorization code flow with PKCE." class="flex-1 px-3 py-1.5 bg-white border border-neutral-300 rounded-xl text-xs text-neutral-800 focus:outline-hidden focus:border-amber-400">
+                  <button onclick="resolveAlexDoubt()" class="px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-white font-bold rounded-xl text-xs transition-all shadow-2xs">
+                    Send Reply
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MODAL 1: TASK CLARITY & STEP-BY-STEP CHECKLIST DRAWER
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="clarity-modal" class="fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-2xl rounded-3xl card-shadow-lg border border-neutral-200/80 p-6 sm:p-7 space-y-6 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-4 pb-4 border-b border-neutral-100">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span id="modal-clarity-priority" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 uppercase tracking-wide">P1 · Critical</span>
+            <span id="modal-clarity-deadline" class="text-xs text-amber-900 font-bold bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">Due at 2:30 PM</span>
+          </div>
+          <h2 id="modal-clarity-title" class="text-xl font-extrabold text-neutral-950 tracking-tight">Task Title</h2>
+        </div>
+        <button onclick="closeClarityModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Section A: Explicit Expected Outcome / Definition of Done -->
+      <div class="bg-amber-50/70 border border-amber-200/70 rounded-2xl p-4 space-y-1.5">
+        <div class="flex items-center gap-2 text-amber-900 font-extrabold text-xs uppercase tracking-wider">
+          <svg class="w-4 h-4 text-neutral-900 inline-block -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+          <span>Expected Outcome &amp; Definition of Done</span>
+        </div>
+        <p id="modal-clarity-outcome" class="text-xs sm:text-sm text-neutral-800 font-semibold leading-relaxed">
+          The concrete deliverable expected upon completion.
+        </p>
+      </div>
+
+      <!-- Section B: Step-by-Step Task Instructions (With Checkable Progress) -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-neutral-500 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 inline-block -mt-0.5 text-neutral-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>Step-by-Step Instructions &amp; Deliverables</span>
+          </h3>
+          <span id="modal-subtasks-progress" class="text-xs font-bold text-amber-800">Check as you progress</span>
+        </div>
+        <ul id="modal-clarity-instructions" class="space-y-2 text-xs sm:text-sm text-neutral-700 font-medium">
+          <!-- Populated dynamically with checkboxes -->
+        </ul>
+      </div>
+
+      <!-- Section C: Attached Resources & Documentation -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-neutral-500 flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 inline-block -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+          <span>Attached Resources &amp; Specifications</span>
+        </h3>
+        <div id="modal-clarity-resources" class="flex flex-wrap gap-2 text-xs">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Section D: Direct Doubt Question Input for This Task -->
+      <div class="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold text-neutral-900 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 inline-block -mt-0.5 text-neutral-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Have a doubt on this task? Ask Alex Rivera directly:</span>
+          </span>
+          <span class="text-[10px] text-neutral-500 font-semibold">Replies in ~15 min</span>
+        </div>
+        <div class="flex gap-2">
+          <input id="modal-task-doubt-input" type="text" placeholder="e.g. Can we omit slide 8 if data isn't ready?" class="flex-1 px-3 py-2 text-xs rounded-xl bg-white border border-neutral-300 text-neutral-800 focus:outline-hidden focus:border-amber-400">
+          <button onclick="submitTaskDoubtFromModal()" class="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-neutral-950 rounded-xl text-xs font-bold shrink-0 transition-all shadow-2xs">
+            Send Doubt
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Footer Status Transition -->
+      <div class="flex items-center justify-between pt-2 border-t border-neutral-100">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-neutral-500">Current State:</span>
+          <span id="modal-clarity-state-badge" class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900">Ongoing</span>
+        </div>
+        <button onclick="closeClarityModal()" class="px-5 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold transition-all">
+          Done Reviewing
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MODAL 2: CREATE NEW TASK
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="new-task-modal" class="fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl card-shadow-lg border border-neutral-200/80 p-6 sm:p-7 space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-neutral-100">
+        <h3 class="text-lg font-extrabold text-neutral-950">Add New Workday Focus Item</h3>
+        <button onclick="closeNewTaskModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm">
+        <div>
+          <label class="font-bold text-neutral-800 block mb-1">Task Title <span class="text-rose-500">*</span></label>
+          <input id="new-task-input-title" type="text" placeholder="e.g. Conduct Security Audit on Token Storage" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 border border-neutral-200 focus:outline-hidden focus:border-amber-400 font-medium">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-neutral-800 block mb-1">Priority Level</label>
+            <select id="new-task-input-priority" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 border border-neutral-200 focus:outline-hidden font-medium">
+              <option value="P1 · Critical">P1 · Critical</option>
+              <option value="P2 · Essential" selected>P2 · Essential</option>
+              <option value="P3 · Low">P3 · Low</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-neutral-800 block mb-1">Deadline / Due Time</label>
+            <input id="new-task-input-due" type="text" value="Today 5:00 PM" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 border border-neutral-200 focus:outline-hidden font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-neutral-800 block mb-1">Expected Outcome / Definition of Done <span class="text-rose-500">*</span></label>
+          <textarea id="new-task-input-outcome" rows="2" placeholder="What is the exact deliverable or acceptance criteria?" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 border border-neutral-200 focus:outline-hidden font-medium"></textarea>
+        </div>
+
+        <div>
+          <label class="font-bold text-neutral-800 block mb-1">Initial Instructions / Notes</label>
+          <input id="new-task-input-instructions" type="text" placeholder="e.g. Follow OWASP checklist in Confluence" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 border border-neutral-200 focus:outline-hidden font-medium">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-neutral-100">
+        <button onclick="closeNewTaskModal()" class="px-4 py-2.5 rounded-xl border border-neutral-200 text-neutral-700 font-bold text-xs hover:bg-neutral-50 transition-all">
+          Cancel
+        </button>
+        <button onclick="submitNewTaskModal()" class="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-neutral-950 font-bold text-xs shadow-xs transition-all">
+          Create Task
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MODAL 3: MANAGER UNBLOCK MODAL (Replaces ugly prompt)
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="unblock-modal" class="fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl card-shadow-lg border border-neutral-200/80 p-6 sm:p-7 space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-neutral-100">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-xl bg-rose-100 text-rose-800">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          </span>
+          <div>
+            <h3 class="text-base font-extrabold text-neutral-950">Unblock Teammate</h3>
+            <p class="text-xs text-neutral-500" id="unblock-modal-subtitle">Alex Chen · API Spec Blocker</p>
+          </div>
+        </div>
+        <button onclick="closeUnblockModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm">
+        <p class="text-neutral-700 font-medium">
+          Select or customize unblocking guidance for <strong>Alex Chen</strong> to unblock the OAuth API implementation:
+        </p>
+        <div class="space-y-2">
+          <label class="font-bold text-neutral-800 block text-xs">Recommended Action &amp; Guidance:</label>
+          <textarea id="unblock-guidance-text" rows="3" class="w-full p-3 rounded-xl bg-neutral-50 border border-neutral-200 focus:outline-hidden focus:border-amber-400 font-medium text-xs text-neutral-800">Updated OAuth API spec uploaded to Confluence. Approved standard Authorization Code flow with PKCE. Good to proceed with staging tests.</textarea>
+        </div>
+        <div class="flex flex-wrap gap-1.5 pt-1 text-[11px]">
+          <button onclick="setUnblockPreset('Approved PKCE flow. Schema synced in #eng-standup.')" class="px-2.5 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium">Schema Synced</button>
+          <button onclick="setUnblockPreset('Merged PR #412. Refresh tokens verified on staging.')" class="px-2.5 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium">PR Merged</button>
+          <button onclick="setUnblockPreset('Scheduled pairing session at 2:00 PM to finalize auth headers.')" class="px-2.5 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium">Pairing at 2 PM</button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-neutral-100">
+        <button onclick="closeUnblockModal()" class="px-4 py-2.5 rounded-xl border border-neutral-200 text-neutral-700 font-bold text-xs hover:bg-neutral-50 transition-all">
+          Cancel
+        </button>
+        <button onclick="confirmUnblockTeammate()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs transition-all">
+          Dispatch &amp; Mark Unblocked
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MODAL 4: TEAMMATE TASK INSPECTION DRAWER (Manager View)
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="teammate-inspect-modal" class="fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-2xl rounded-3xl card-shadow-lg border border-neutral-200/80 p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between pb-3 border-b border-neutral-100">
+        <div class="flex items-center gap-3">
+          <div id="inspect-avatar" class="w-10 h-10 rounded-xl bg-amber-400 text-neutral-950 font-bold flex items-center justify-center text-sm shadow-2xs">
+            AM
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="inspect-name" class="text-base font-extrabold text-neutral-950">Anna Mercer</h3>
+              <span id="inspect-badge" class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">On Track</span>
+            </div>
+            <p id="inspect-role" class="text-xs text-neutral-500 font-medium">Senior Frontend Engineer</p>
+          </div>
+        </div>
+        <button onclick="closeTeammateInspectModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="flex items-center justify-between font-bold text-neutral-700">
+          <span class="uppercase tracking-wider text-[11px] text-neutral-500">Today's Assigned Deliverables</span>
+          <span id="inspect-summary-counts">2 Completed · 3 Ongoing · 1 Pending</span>
+        </div>
+        <div id="inspect-task-list" class="space-y-2.5">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <div class="p-3.5 bg-neutral-50 rounded-2xl border border-neutral-200 text-xs space-y-2">
+        <span class="font-bold text-neutral-800 block">Manager Actions &amp; Feedback:</span>
+        <div class="flex items-center gap-2">
+          <input id="inspect-feedback-input" type="text" placeholder="Leave an encouraging note or outcome sign-off..." class="flex-1 px-3 py-2 bg-white border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:outline-hidden focus:border-amber-400">
+          <button onclick="sendManagerFeedback()" class="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white font-bold rounded-xl text-xs transition-all shrink-0">
+            Send Note
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2 border-t border-neutral-100">
+        <button onclick="closeTeammateInspectModal()" class="px-5 py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-bold text-xs transition-all">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MODAL 5: SEED DATA & SCENARIO SWITCHER
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="seed-data-modal" class="fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xl rounded-3xl card-shadow-lg border border-neutral-200/80 p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between pb-3 border-b border-neutral-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-neutral-950">Manage Seed Data &amp; Scenarios</h3>
+            <p class="text-xs text-neutral-500">Switch between demo workflows or load custom task data.</p>
+          </div>
+        </div>
+        <button onclick="closeSeedDataModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Quick Preset Scenarios -->
+      <div class="space-y-3">
+        <label class="text-xs font-bold uppercase tracking-wider text-neutral-500 block">Choose Demo Scenario:</label>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+          <!-- Scenario 1: Standard Balanced -->
+          <div onclick="applySeedScenario('standard')" class="cursor-pointer p-3.5 rounded-2xl bg-neutral-50 hover:bg-amber-50/70 border border-neutral-200 hover:border-amber-300 transition-all space-y-1">
+            <div class="flex items-center justify-between font-bold text-neutral-900">
+              <span>⚡ Standard Workday</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-900">Default</span>
+            </div>
+            <p class="text-neutral-500 text-[11px] leading-relaxed">Balanced priorities, active 1:1 prep with Alex, 1 squad blocker.</p>
+          </div>
+
+          <!-- Scenario 2: High Priority Crunch -->
+          <div onclick="applySeedScenario('crunch')" class="cursor-pointer p-3.5 rounded-2xl bg-neutral-50 hover:bg-rose-50/70 border border-neutral-200 hover:border-rose-300 transition-all space-y-1">
+            <div class="flex items-center justify-between font-bold text-neutral-900">
+              <span>🔥 Sprint Deadline Crunch</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-900">Urgent</span>
+            </div>
+            <p class="text-neutral-500 text-[11px] leading-relaxed">Multiple P1 critical deliverables, impending staging deploy.</p>
+          </div>
+
+          <!-- Scenario 3: All Tasks Crushed -->
+          <div onclick="applySeedScenario('completed')" class="cursor-pointer p-3.5 rounded-2xl bg-neutral-50 hover:bg-emerald-50/70 border border-neutral-200 hover:border-emerald-300 transition-all space-y-1">
+            <div class="flex items-center justify-between font-bold text-neutral-900">
+              <span>🎉 All Goals Crushed</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900">100%</span>
+            </div>
+            <p class="text-neutral-500 text-[11px] leading-relaxed">All tasks done on time, cadence maxed, ready for the weekend.</p>
+          </div>
+
+          <!-- Scenario 4: New Hire Onboarding -->
+          <div onclick="applySeedScenario('onboarding')" class="cursor-pointer p-3.5 rounded-2xl bg-neutral-50 hover:bg-blue-50/70 border border-neutral-200 hover:border-blue-300 transition-all space-y-1">
+            <div class="flex items-center justify-between font-bold text-neutral-900">
+              <span>🌱 New Hire Day 1</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-900">Onboarding</span>
+            </div>
+            <p class="text-neutral-500 text-[11px] leading-relaxed">Initial environment setup, buddy meetings, repo permissions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom JSON Editor (For full data modification freedom) -->
+      <div class="space-y-2 pt-2 border-t border-neutral-100 text-xs">
+        <div class="flex items-center justify-between">
+          <label class="font-bold text-neutral-800">Or Edit / Paste Custom Tasks JSON:</label>
+          <button onclick="populateCurrentJson()" class="text-amber-800 font-semibold hover:underline text-[11px]">View Current JSON</button>
+        </div>
+        <textarea id="seed-json-input" rows="4" placeholder='[{"id":"task-1","title":"Custom Task","priority":"P1 · Critical", ...}]' class="w-full p-3 font-mono text-[11px] rounded-xl bg-neutral-50 border border-neutral-200 text-neutral-800 focus:outline-hidden focus:border-amber-400"></textarea>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-neutral-100">
+        <button onclick="applySeedScenario('standard')" class="px-3.5 py-2 rounded-xl text-neutral-600 hover:text-neutral-900 text-xs font-bold hover:bg-neutral-100 transition-all">
+          Reset to Default
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeSeedDataModal()" class="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-700 font-bold text-xs hover:bg-neutral-50 transition-all">
+            Cancel
+          </button>
+          <button onclick="applyCustomJsonData()" class="px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-neutral-950 font-bold text-xs shadow-xs transition-all">
+            Apply JSON Data
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════════════════ -->
+  <footer class="mt-auto border-t border-neutral-200/80 bg-white/80 py-6 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 font-medium">
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-neutral-900 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <rect x="2" y="2" width="9" height="9" rx="2"/>
+            <rect x="13" y="2" width="9" height="9" rx="2"/>
+            <rect x="2" y="13" width="9" height="9" rx="2"/>
+            <rect x="13" y="13" width="9" height="9" rx="2" opacity=".4"/>
+          </svg>
+          <span><strong>My Workday</strong> — Daily clarity, priorities, and alignment for modern teams.</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="hover:text-amber-700 hover:underline">Landing Page Deck</a>
+        <a href="javascript:void(0)" onclick="switchPerspective('employee')" class="hover:text-amber-700">Employee Workspace</a>
+        <a href="javascript:void(0)" onclick="switchPerspective('manager')" class="hover:text-amber-700">Manager Overview</a>
+        <span>&copy; 2026 Acme Corp</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       JAVASCRIPT: PROTOTYPE STATE & DATA LOGIC
+       ══════════════════════════════════════════════════════════════ -->
+  <script>
+    // Embedded SVG icons
+    const SVG_CLOCK = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+    const SVG_TIMER = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="2" x2="14" y2="2"></line><line x1="12" y1="14" x2="15" y2="11"></line><circle cx="12" cy="14" r="8"></circle></svg>';
+    const SVG_TARGET = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5 text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>';
+    const SVG_CLIPBOARD = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>';
+    const SVG_MESSAGE = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
+    const SVG_CHECK = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+    const SVG_SYNC = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>';
+    const SVG_HOURGLASS = '<svg class="w-3.5 h-3.5 inline-block -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>';
+
+    // Core Tasks Seed Data
+    let tasksData = [
+      {
+        id: 'task-1',
+        title: 'Finalize Q3 OKR Alignment Deck',
+        priority: 'P1 · Critical',
+        priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+        status: 'ongoing',
+        dueTime: 'Today 2:30 PM',
+        deadlineBadge: 'Due in 1h 45m · Urgent',
+        timeEstimate: 'Est. 45 min',
+        expectedOutcome: '12-slide Figma deck submitted to Theresa before 3:30 PM sync with marketing team metrics incorporated.',
+        instructions: [
+          { text: 'Pull conversion and churn rates from Q2 Mixpanel dashboard.', done: true },
+          { text: 'Review slide 6 (Token design progress) with Alex Rivera.', done: true },
+          { text: 'Export PDF copy for executive review and paste Figma link in #leadership-sync.', done: false }
+        ],
+        resources: ['Figma OKR Template v2', 'Mixpanel Q2 Report', 'Q3 Priorities Sheet'],
+        doubts: [
+          { sender: 'You', time: '18m ago', text: 'PDF format or live Figma deck for Q3 design tokens?' },
+          { sender: 'Alex Rivera', time: '12m ago', text: 'Live Figma deck is ideal! Added review slot at 4:00 PM.' }
+        ]
+      },
+      {
+        id: 'task-2',
+        title: 'Review Onboarding Checklist for Marcus',
+        priority: 'P2 · Essential',
+        priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+        status: 'ongoing',
+        dueTime: 'Today 4:15 PM',
+        deadlineBadge: 'Due in 3h 30m',
+        timeEstimate: 'Est. 30 min',
+        expectedOutcome: 'Approve buddy assignment, verify repo access on GitHub, and send Day 1 welcome packet.',
+        instructions: [
+          { text: 'Verify Liam Vance is assigned as primary buddy.', done: true },
+          { text: 'Grant read access to core repo & design system repo.', done: false },
+          { text: 'Confirm Google Meet links for Day 1 intro calls are in calendar.', done: false }
+        ],
+        resources: ['New Hire Welcome Playbook', 'GitHub Team Invites'],
+        doubts: [
+          { sender: 'You', time: '2h ago', text: 'Who is assigned as primary buddy for Git setup?' },
+          { sender: 'Alex Rivera', time: '1h ago', text: 'Liam Vance confirmed for buddy onboarding.' }
+        ]
+      },
+      {
+        id: 'task-3',
+        title: 'Sign Revised Remote Work Addendum',
+        priority: 'P3 · Low',
+        priorityClass: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+        status: 'pending',
+        dueTime: 'End of Day',
+        deadlineBadge: 'Due Today 6:00 PM',
+        timeEstimate: 'Est. 15 min',
+        expectedOutcome: 'Complete signature on remote work equipment stipend terms ($1,200/yr budget).',
+        instructions: [
+          { text: 'Open DocuSign link sent by People Operations.', done: false },
+          { text: 'Verify home address and hardware budget line item.', done: false },
+          { text: 'Download signed copy for personal records.', done: false }
+        ],
+        resources: ['DocuSign Envelope #8921', 'Stipend Policy FAQ'],
+        doubts: []
+      },
+      {
+        id: 'task-4',
+        title: 'OAuth Auth0 Session Token Fallback Implementation',
+        priority: 'P1 · Critical',
+        priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+        status: 'completed',
+        dueTime: 'Completed at 10:15 AM',
+        deadlineBadge: 'Completed On Time',
+        timeEstimate: 'Est. 60 min',
+        expectedOutcome: 'Zero token leaks in staging logs, fallback to refresh token on 401, all unit tests passing.',
+        instructions: [
+          { text: 'Intercept 401 responses in HTTP client middleware.', done: true },
+          { text: 'Request new token via refresh endpoint with retry backoff.', done: true },
+          { text: 'Write Jest integration test for expired token scenario.', done: true }
+        ],
+        resources: ['Auth0 Implementation RFC', 'PR #412'],
+        doubts: []
+      },
+      {
+        id: 'task-5',
+        title: 'Review Sophie Chen\'s Design Handoff for Settings View',
+        priority: 'P2 · Essential',
+        priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+        status: 'completed',
+        dueTime: 'Completed at 11:45 AM',
+        deadlineBadge: 'Completed On Time',
+        timeEstimate: 'Est. 30 min',
+        expectedOutcome: 'Leave comments on Figma token specs, verify responsive breakpoints at 768px and 1280px.',
+        instructions: [
+          { text: 'Check token names match CSS variables in styles.css.', done: true },
+          { text: 'Ensure high-contrast accessible states are present for switches.', done: true }
+        ],
+        resources: ['Figma Settings v2.4 Spec'],
+        doubts: []
+      },
+      {
+        id: 'task-6',
+        title: 'Prepare Weekly 1:1 Discussion Topics for Alex',
+        priority: 'P2 · Essential',
+        priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+        status: 'ongoing',
+        dueTime: 'Today 3:15 PM',
+        deadlineBadge: 'Due in 2h 30m',
+        timeEstimate: 'Est. 20 min',
+        expectedOutcome: '3 structured discussion points: OKR deliverable sign-off, frontend refactor timeline, Q4 mentorship.',
+        instructions: [
+          { text: 'Consolidate questions raised throughout the week into bullet points.', done: true },
+          { text: 'Review team blocker list (Alex Chen\'s API spec blocker).', done: false }
+        ],
+        resources: ['1:1 Shared Notion Doc'],
+        doubts: []
+      }
+    ];
+
+    let globalDoubtsList = [
+      {
+        id: 'd1',
+        taskTitle: 'OKR Alignment Deck',
+        question: 'PDF format or live Figma deck for Q3 metrics?',
+        answer: 'Live Figma deck is ideal! Added review slot at 4:00 PM. 👍',
+        time: '18m ago'
+      },
+      {
+        id: 'd2',
+        taskTitle: 'Marcus Onboarding',
+        question: 'Who is assigned as primary buddy for Git setup?',
+        answer: 'Liam Vance confirmed for buddy onboarding.',
+        time: '2h ago'
+      }
+    ];
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let activeModalTaskId = null;
+    let isAlexChenBlocked = true;
+
+    // Toast Notification System (Smooth UX)
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = "pointer-events-auto bg-neutral-950 text-white px-4 py-3 rounded-2xl shadow-xl border border-neutral-800 text-xs font-semibold flex items-center gap-2.5 animate-slide-in";
+      const icon = type === 'success' ? '✓' : type === 'info' ? 'ℹ' : '⚡';
+      toast.innerHTML = `<span class="w-4 h-4 rounded-full bg-amber-400 text-neutral-950 flex items-center justify-center font-bold text-[10px]">${icon}</span> <span>${message}</span>`;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    // Render Tasks with Search & State Filters
+    
+    // Scenario Presets for Seed Data Button
+    const SEED_SCENARIOS = {
+      standard: [
+        {
+          id: 'task-1',
+          title: 'Finalize Q3 OKR Alignment Deck',
+          priority: 'P1 · Critical',
+          priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+          status: 'ongoing',
+          dueTime: 'Today 2:30 PM',
+          deadlineBadge: 'Due in 1h 45m · Urgent',
+          timeEstimate: 'Est. 45 min',
+          expectedOutcome: '12-slide Figma deck submitted to Theresa before 3:30 PM sync with marketing team metrics incorporated.',
+          instructions: [
+            { text: 'Pull conversion and churn rates from Q2 Mixpanel dashboard.', done: true },
+            { text: 'Review slide 6 (Token design progress) with Alex Rivera.', done: true },
+            { text: 'Export PDF copy for executive review and paste Figma link in #leadership-sync.', done: false }
+          ],
+          resources: ['Figma OKR Template v2', 'Mixpanel Q2 Report', 'Q3 Priorities Sheet'],
+          doubts: [
+            { sender: 'You', time: '18m ago', text: 'PDF format or live Figma deck for Q3 design tokens?' },
+            { sender: 'Alex Rivera', time: '12m ago', text: 'Live Figma deck is ideal! Added review slot at 4:00 PM.' }
+          ]
+        },
+        {
+          id: 'task-2',
+          title: 'Review Onboarding Checklist for Marcus',
+          priority: 'P2 · Essential',
+          priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+          status: 'ongoing',
+          dueTime: 'Today 4:15 PM',
+          deadlineBadge: 'Due in 3h 30m',
+          timeEstimate: 'Est. 30 min',
+          expectedOutcome: 'Approve buddy assignment, verify repo access on GitHub, and send Day 1 welcome packet.',
+          instructions: [
+            { text: 'Verify Liam Vance is assigned as primary buddy.', done: true },
+            { text: 'Grant read access to core repo & design system repo.', done: false },
+            { text: 'Confirm Google Meet links for Day 1 intro calls are in calendar.', done: false }
+          ],
+          resources: ['New Hire Welcome Playbook', 'GitHub Team Invites'],
+          doubts: [
+            { sender: 'You', time: '2h ago', text: 'Who is assigned as primary buddy for Git setup?' },
+            { sender: 'Alex Rivera', time: '1h ago', text: 'Liam Vance confirmed for buddy onboarding.' }
+          ]
+        },
+        {
+          id: 'task-3',
+          title: 'Sign Revised Remote Work Addendum',
+          priority: 'P3 · Low',
+          priorityClass: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+          status: 'pending',
+          dueTime: 'End of Day',
+          deadlineBadge: 'Due Today 6:00 PM',
+          timeEstimate: 'Est. 15 min',
+          expectedOutcome: 'Complete signature on remote work equipment stipend terms ($1,200/yr budget).',
+          instructions: [
+            { text: 'Open DocuSign link sent by People Operations.', done: false },
+            { text: 'Verify home address and hardware budget line item.', done: false },
+            { text: 'Download signed copy for personal records.', done: false }
+          ],
+          resources: ['DocuSign Envelope #8921', 'Stipend Policy FAQ'],
+          doubts: []
+        },
+        {
+          id: 'task-4',
+          title: 'OAuth Auth0 Session Token Fallback Implementation',
+          priority: 'P1 · Critical',
+          priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+          status: 'completed',
+          dueTime: 'Completed at 10:15 AM',
+          deadlineBadge: 'Completed On Time',
+          timeEstimate: 'Est. 60 min',
+          expectedOutcome: 'Zero token leaks in staging logs, fallback to refresh token on 401, all unit tests passing.',
+          instructions: [
+            { text: 'Intercept 401 responses in HTTP client middleware.', done: true },
+            { text: 'Request new token via refresh endpoint with retry backoff.', done: true },
+            { text: 'Write Jest integration test for expired token scenario.', done: true }
+          ],
+          resources: ['Auth0 Implementation RFC', 'PR #412'],
+          doubts: []
+        },
+        {
+          id: 'task-5',
+          title: 'Review Sophie Chen\'s Design Handoff for Settings View',
+          priority: 'P2 · Essential',
+          priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+          status: 'completed',
+          dueTime: 'Completed at 11:45 AM',
+          deadlineBadge: 'Completed On Time',
+          timeEstimate: 'Est. 30 min',
+          expectedOutcome: 'Leave comments on Figma token specs, verify responsive breakpoints at 768px and 1280px.',
+          instructions: [
+            { text: 'Check token names match CSS variables in styles.css.', done: true },
+            { text: 'Ensure high-contrast accessible states are present for switches.', done: true }
+          ],
+          resources: ['Figma Settings v2.4 Spec'],
+          doubts: []
+        },
+        {
+          id: 'task-6',
+          title: 'Prepare Weekly 1:1 Discussion Topics for Alex',
+          priority: 'P2 · Essential',
+          priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+          status: 'ongoing',
+          dueTime: 'Today 3:15 PM',
+          deadlineBadge: 'Due in 2h 30m',
+          timeEstimate: 'Est. 20 min',
+          expectedOutcome: '3 structured discussion points: OKR deliverable sign-off, frontend refactor timeline, Q4 mentorship.',
+          instructions: [
+            { text: 'Consolidate questions raised throughout the week into bullet points.', done: true },
+            { text: 'Review team blocker list (Alex Chen\'s API spec blocker).', done: false }
+          ],
+          resources: ['1:1 Shared Notion Doc'],
+          doubts: []
+        }
+      ],
+      crunch: [
+        {
+          id: 'task-c1',
+          title: 'Deploy Hotfix for Auth0 Refresh Token Race Condition',
+          priority: 'P1 · Critical',
+          priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+          status: 'ongoing',
+          dueTime: 'Due in 45 min',
+          deadlineBadge: '🚨 Immediate Action Required',
+          timeEstimate: 'Est. 30 min',
+          expectedOutcome: 'Patch concurrent refresh token requests, run automated smoke tests, deploy to EU-West cluster.',
+          instructions: [
+            { text: 'Add mutex lock to token exchange handler.', done: true },
+            { text: 'Verify Zero 401 loop errors in Sentry.', done: false },
+            { text: 'Ping Alex Rivera for prod deployment key.', done: false }
+          ],
+          resources: ['Hotfix Branch #882', 'Sentry Incident #409'],
+          doubts: []
+        },
+        {
+          id: 'task-c2',
+          title: 'Finalize Q3 OKR Alignment Deck for VP Review',
+          priority: 'P1 · Critical',
+          priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+          status: 'ongoing',
+          dueTime: 'Today 2:00 PM',
+          deadlineBadge: 'Due in 1h 15m',
+          timeEstimate: 'Est. 45 min',
+          expectedOutcome: 'Final 14-slide deck with verified Q2 revenue & retention numbers.',
+          instructions: [
+            { text: 'Embed final revenue chart from finance team.', done: true },
+            { text: 'Verify mobile churn metric with Theresa.', done: false }
+          ],
+          resources: ['Finance Q2 Sheet', 'Executive Deck v3'],
+          doubts: []
+        },
+        {
+          id: 'task-c3',
+          title: 'Coordinate Emergency Staging Cluster Migration',
+          priority: 'P1 · Critical',
+          priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+          status: 'pending',
+          dueTime: 'Today 4:00 PM',
+          deadlineBadge: 'Pending Previous Fix',
+          timeEstimate: 'Est. 60 min',
+          expectedOutcome: 'Switch traffic from legacy cluster to k8s v1.28 without downtime.',
+          instructions: [
+            { text: 'Review DNS cutover plan with Raj Sharma.', done: false },
+            { text: 'Warm up cache instances.', done: false }
+          ],
+          resources: ['Cutover Runbook', 'CloudWatch Alarm Dashboard'],
+          doubts: []
+        }
+      ],
+      completed: [
+        {
+          id: 'task-d1',
+          title: 'Deliver Q3 OKR Alignment Deck & Leadership Review',
+          priority: 'P1 · Critical',
+          priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+          status: 'completed',
+          dueTime: 'Completed at 1:30 PM',
+          deadlineBadge: '✅ Approved by VP',
+          timeEstimate: 'Est. 45 min',
+          expectedOutcome: '14-slide deck signed off by engineering lead and product director.',
+          instructions: [
+            { text: 'Incorporate revenue metrics.', done: true },
+            { text: 'Present to leadership committee.', done: true }
+          ],
+          resources: ['Final Deck PDF'],
+          doubts: []
+        },
+        {
+          id: 'task-d2',
+          title: 'Complete Onboarding Checklist & Welcome Packet for Marcus',
+          priority: 'P2 · Essential',
+          priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+          status: 'completed',
+          dueTime: 'Completed at 2:15 PM',
+          deadlineBadge: '✅ Welcome Sent',
+          timeEstimate: 'Est. 30 min',
+          expectedOutcome: 'Buddy confirmed, GitHub access granted, Day 1 calendar fully scheduled.',
+          instructions: [
+            { text: 'Assign buddy.', done: true },
+            { text: 'Send invite packet.', done: true }
+          ],
+          resources: ['New Hire Welcome Pack'],
+          doubts: []
+        },
+        {
+          id: 'task-d3',
+          title: 'Execute 1:1 Weekly Sync with Alex Rivera',
+          priority: 'P2 · Essential',
+          priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+          status: 'completed',
+          dueTime: 'Completed at 3:30 PM',
+          deadlineBadge: '✅ Sync Finished',
+          timeEstimate: 'Est. 30 min',
+          expectedOutcome: 'All doubts clarified, sprint goals aligned, mentorship goals established.',
+          instructions: [
+            { text: 'Review team blockers.', done: true },
+            { text: 'Sign off on Q4 goals.', done: true }
+          ],
+          resources: ['1:1 Shared Notes'],
+          doubts: []
+        }
+      ],
+      onboarding: [
+        {
+          id: 'task-o1',
+          title: 'Set Up Development Environment & GPG Keys',
+          priority: 'P1 · Critical',
+          priorityClass: 'bg-rose-50 text-rose-700 border-rose-200',
+          status: 'ongoing',
+          dueTime: 'Today 12:00 PM',
+          deadlineBadge: 'Day 1 Milestone',
+          timeEstimate: 'Est. 60 min',
+          expectedOutcome: 'Local Docker containers running, Git commits signed with verified GPG key.',
+          instructions: [
+            { text: 'Clone monorepo and run setup script.', done: true },
+            { text: 'Generate SSH and GPG keys and upload to GitHub.', done: true },
+            { text: 'Verify test suite passes locally.', done: false }
+          ],
+          resources: ['Developer Setup Guide', 'Docker Compose Spec'],
+          doubts: []
+        },
+        {
+          id: 'task-o2',
+          title: 'Day 1 Buddy Lunch & Welcome Sync with Liam Vance',
+          priority: 'P2 · Essential',
+          priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+          status: 'ongoing',
+          dueTime: 'Today 1:00 PM',
+          deadlineBadge: 'In 30 min',
+          timeEstimate: 'Est. 45 min',
+          expectedOutcome: 'Walkthrough team architecture, communication norms, and #eng channels.',
+          instructions: [
+            { text: 'Review team norms document.', done: true },
+            { text: 'Join core Slack channels.', done: false }
+          ],
+          resources: ['Welcome Playbook'],
+          doubts: []
+        },
+        {
+          id: 'task-o3',
+          title: 'Complete Company Security & Compliance Certification',
+          priority: 'P2 · Essential',
+          priorityClass: 'bg-amber-100/70 text-amber-900 border-amber-200',
+          status: 'pending',
+          dueTime: 'End of Day',
+          deadlineBadge: 'Due Today 5:00 PM',
+          timeEstimate: 'Est. 30 min',
+          expectedOutcome: 'Pass 10-question compliance quiz and enable 1Password vault.',
+          instructions: [
+            { text: 'Watch SOC2 security training video.', done: false },
+            { text: 'Submit compliance certificate to HR portal.', done: false }
+          ],
+          resources: ['Security Training Portal'],
+          doubts: []
+        }
+      ]
+    };
+
+    // Seed Data Modal Controls
+    function openSeedDataModal() {
+      document.getElementById('seed-data-modal').classList.remove('hidden');
+      document.getElementById('seed-data-modal').classList.add('flex');
+    }
+
+    function closeSeedDataModal() {
+      document.getElementById('seed-data-modal').classList.add('hidden');
+      document.getElementById('seed-data-modal').classList.remove('flex');
+    }
+
+    function applySeedScenario(scenarioName) {
+      if (!SEED_SCENARIOS[scenarioName]) return;
+
+      // Deep copy scenario tasks
+      tasksData = JSON.parse(JSON.stringify(SEED_SCENARIOS[scenarioName]));
+      closeSeedDataModal();
+      renderTasks();
+      
+      const scenarioTitles = {
+        standard: 'Standard Workday',
+        crunch: 'Sprint Deadline Crunch',
+        completed: 'All Goals Crushed',
+        onboarding: 'New Hire Onboarding'
+      };
+      showToast(`Loaded "${scenarioTitles[scenarioName] || scenarioName}" seed data!`, 'success');
+    }
+
+    function populateCurrentJson() {
+      const textarea = document.getElementById('seed-json-input');
+      if (textarea) {
+        textarea.value = JSON.stringify(tasksData, null, 2);
+      }
+    }
+
+    function applyCustomJsonData() {
+      const textarea = document.getElementById('seed-json-input');
+      const raw = textarea.value.trim();
+      if (!raw) {
+        showToast('Please enter valid JSON or choose a scenario.', 'info');
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+          showToast('JSON must be an array of task objects.', 'info');
+          return;
+        }
+        tasksData = parsed;
+        closeSeedDataModal();
+        renderTasks();
+        showToast('Custom task data applied successfully!', 'success');
+      } catch (e) {
+        showToast('Invalid JSON syntax: ' + e.message, 'info');
+      }
+    }
+
+    function renderTasks() {
+      const container = document.getElementById('tasks-container');
+      if (!container) return;
+
+      const filtered = tasksData.filter(t => {
+        const matchesState = (currentFilter === 'all') || (t.status === currentFilter);
+        const matchesQuery = !searchQuery || t.title.toLowerCase().includes(searchQuery.toLowerCase()) || t.expectedOutcome.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesState && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center rounded-2xl bg-neutral-50 border border-neutral-200/80 space-y-2">
+            <h3 class="text-sm font-bold text-neutral-800">No matching tasks found</h3>
+            <p class="text-xs text-neutral-500 font-medium">Clear search or switch category filters to see tasks.</p>
+          </div>
+        `;
+        updateMetrics();
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => {
+        const isDone = t.status === 'completed';
+        const isOngoing = t.status === 'ongoing';
+        const isPending = t.status === 'pending';
+
+        const completedSubtasks = t.instructions ? t.instructions.filter(i => i.done).length : 0;
+        const totalSubtasks = t.instructions ? t.instructions.length : 0;
+
+        return `
+          <div class="task-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white border ${isDone ? 'border-emerald-200/80 bg-emerald-50/15 opacity-90' : isOngoing ? 'border-amber-300/90 shadow-xs' : 'border-neutral-200/80'} transition-all hover:border-amber-400 hover:shadow-xs group" data-task-id="${t.id}">
+            
+            <div class="flex items-start sm:items-center justify-between gap-3.5">
+              
+              <!-- Left: Fast 1-Click Completion Toggle Checkbox -->
+              <button onclick="event.stopPropagation(); setTaskState('${t.id}', '${isDone ? 'ongoing' : 'completed'}')" class="mt-0.5 sm:mt-0 w-6 h-6 rounded-lg border-2 ${isDone ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-neutral-300 hover:border-amber-500 bg-white'} flex items-center justify-center shrink-0 transition-colors cursor-pointer" title="${isDone ? 'Mark as Ongoing' : 'Mark as Done'}">
+                ${isDone ? '<span class="text-xs font-bold leading-none">✓</span>' : ''}
+              </button>
+
+              <!-- Center: Clean Title & Concise Pills (Effortless on Eyes) -->
+              <div class="flex-1 min-w-0 cursor-pointer" onclick="openClarityModal('${t.id}')">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md border uppercase tracking-wider ${t.priorityClass}">
+                    ${t.priority}
+                  </span>
+                  <span class="text-xs font-semibold text-neutral-500 flex items-center gap-1">
+                    ${SVG_CLOCK} ${t.dueTime}
+                  </span>
+                  <span class="hidden md:inline text-neutral-300">·</span>
+                  <span class="text-xs text-amber-900 font-semibold bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-md truncate max-w-xs flex items-center gap-1" title="${t.expectedOutcome}">
+                    ${SVG_TARGET} ${t.expectedOutcome}
+                  </span>
+                </div>
+
+                <h3 class="text-sm sm:text-base font-extrabold text-neutral-950 leading-snug ${isDone ? 'line-through text-neutral-400' : 'group-hover:text-amber-900'} transition-colors">
+                  ${t.title}
+                </h3>
+              </div>
+
+              <!-- Right: Quick State Selector & Details Trigger -->
+              <div class="flex items-center gap-2 shrink-0 self-start sm:self-center">
+                
+                <!-- Quick 3-State Dropdown / Button -->
+                <div class="relative">
+                  <button onclick="event.stopPropagation(); cycleTaskState('${t.id}')" class="px-2.5 py-1 rounded-xl text-xs font-bold border flex items-center gap-1.5 transition-all ${isDone ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : isOngoing ? 'bg-amber-400 text-neutral-950 border-amber-400 shadow-2xs' : 'bg-neutral-100 text-neutral-700 border-neutral-200'}" title="Click to cycle status: Pending ➔ Ongoing ➔ Done">
+                    ${isDone ? SVG_CHECK + ' Done' : isOngoing ? SVG_SYNC + ' Ongoing' : SVG_HOURGLASS + ' Pending'}
+                  </button>
+                </div>
+
+                <!-- Open Full Details Modal Button -->
+                <button onclick="openClarityModal('${t.id}')" class="w-8 h-8 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-neutral-950 flex items-center justify-center transition-all cursor-pointer" title="View step-by-step instructions & expected outcome">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      updateMetrics();
+    }
+
+    // Task Search Handler
+    function handleSearchTasks(val) {
+      searchQuery = val.trim();
+      renderTasks();
+    }
+
+    // Task State Transition with Visual Toast
+    function cycleTaskState(taskId) {
+      const task = tasksData.find(t => t.id === taskId);
+      if (!task) return;
+      if (task.status === 'pending') setTaskState(taskId, 'ongoing');
+      else if (task.status === 'ongoing') setTaskState(taskId, 'completed');
+      else setTaskState(taskId, 'pending');
+    }
+
+    function setTaskState(taskId, newState) {
+      const task = tasksData.find(t => t.id === taskId);
+      if (!task) return;
+
+      task.status = newState;
+      if (newState === 'completed') {
+        task.deadlineBadge = 'Completed Just Now';
+        showToast(`"${task.title}" marked as completed!`, 'success');
+      } else if (newState === 'ongoing') {
+        task.deadlineBadge = 'In Progress';
+        showToast(`"${task.title}" moved to ongoing progress.`, 'info');
+      } else {
+        task.deadlineBadge = 'To Do';
+        showToast(`"${task.title}" marked as pending.`, 'info');
+      }
+
+      renderTasks();
+    }
+
+    // Update Header, Rhythm Gauge & Stat Counters
+    function updateMetrics() {
+      const ongoing = tasksData.filter(t => t.status === 'ongoing').length;
+      const pending = tasksData.filter(t => t.status === 'pending').length;
+      const completed = tasksData.filter(t => t.status === 'completed').length;
+      const total = tasksData.length;
+
+      // Update filter counters
+      const cAll = document.getElementById('count-filter-all');
+      const cOng = document.getElementById('count-filter-ongoing');
+      const cPen = document.getElementById('count-filter-pending');
+      const cCom = document.getElementById('count-filter-completed');
+      if (cAll) cAll.innerText = total;
+      if (cOng) cOng.innerText = ongoing;
+      if (cPen) cPen.innerText = pending;
+      if (cCom) cCom.innerText = completed;
+
+      // Update stat cards
+      const sOng = document.getElementById('stat-ongoing-count');
+      const sPen = document.getElementById('stat-pending-count');
+      const sCom = document.getElementById('stat-completed-count');
+      if (sOng) sOng.innerText = ongoing;
+      if (sPen) sPen.innerText = pending;
+      if (sCom) sCom.innerText = completed;
+
+      // Update progress bar
+      const pctDone = total > 0 ? Math.round((completed / total) * 100) : 0;
+      const pctOngoing = total > 0 ? Math.round((ongoing / total) * 100) : 0;
+      const pctPending = total > 0 ? Math.round((pending / total) * 100) : 0;
+
+      const barDone = document.getElementById('bar-completed');
+      const barOng = document.getElementById('bar-ongoing');
+      const barPen = document.getElementById('bar-pending');
+      if (barDone) barDone.style.width = pctDone + '%';
+      if (barOng) barOng.style.width = pctOngoing + '%';
+      if (barPen) barPen.style.width = pctPending + '%';
+
+      // Update circular SVG rhythm ring
+      const circleProgress = document.getElementById('circle-progress');
+      const circleLabel = document.getElementById('circle-percent-label');
+      if (circleProgress) circleProgress.setAttribute('stroke-dasharray', `${pctDone}, 100`);
+      if (circleLabel) circleLabel.innerText = pctDone + '%';
+
+      // Update Manager View sync metrics for Anna
+      const mgrDone = document.getElementById('mgr-anna-completed');
+      const mgrOng = document.getElementById('mgr-anna-ongoing');
+      const mgrBarDone = document.getElementById('mgr-bar-completed');
+      const mgrBarOng = document.getElementById('mgr-bar-ongoing');
+      const mgrBarPen = document.getElementById('mgr-bar-pending');
+      if (mgrDone) mgrDone.innerText = completed;
+      if (mgrOng) mgrOng.innerText = ongoing;
+      if (mgrBarDone) mgrBarDone.style.width = pctDone + '%';
+      if (mgrBarOng) mgrBarOng.style.width = pctOngoing + '%';
+      if (mgrBarPen) mgrBarPen.style.width = pctPending + '%';
+    }
+
+    // Filter Tabs
+    function filterTaskState(state) {
+      currentFilter = state;
+      ['all', 'ongoing', 'pending', 'completed'].forEach(s => {
+        const btn = document.getElementById('filter-' + s);
+        if (btn) {
+          if (s === state) {
+            btn.className = "px-3 py-1.5 rounded-xl bg-white text-neutral-950 shadow-2xs font-extrabold flex items-center gap-1.5 transition-all";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-xl text-neutral-600 hover:text-neutral-950 font-bold flex items-center gap-1.5 transition-all";
+          }
+        }
+      });
+      renderTasks();
+    }
+
+    // Role Switcher: Employee Workspace ↔ Manager Overview
+    function switchPerspective(role) {
+      const empContainer = document.getElementById('view-employee-container');
+      const mgrContainer = document.getElementById('view-manager-container');
+      const empTab = document.getElementById('view-tab-employee');
+      const mgrTab = document.getElementById('view-tab-manager');
+
+      if (role === 'manager') {
+        empContainer.classList.add('hidden');
+        mgrContainer.classList.remove('hidden');
+        mgrTab.className = "px-4 py-1.5 rounded-full bg-white text-neutral-950 shadow-xs flex items-center gap-2 font-bold transition-all";
+        empTab.className = "px-4 py-1.5 rounded-full text-neutral-600 hover:text-neutral-900 flex items-center gap-2 font-bold transition-all";
+        showToast("Switched to Manager Overview (Alex Rivera)");
+      } else {
+        mgrContainer.classList.add('hidden');
+        empContainer.classList.remove('hidden');
+        empTab.className = "px-4 py-1.5 rounded-full bg-white text-neutral-950 shadow-xs flex items-center gap-2 font-bold transition-all";
+        mgrTab.className = "px-4 py-1.5 rounded-full text-neutral-600 hover:text-neutral-900 flex items-center gap-2 font-bold transition-all";
+        showToast("Switched to Employee Workspace (Anna Mercer)");
+      }
+    }
+
+    // Open Task Clarity & Instructions Drawer with Checkable Sub-tasks
+    function openClarityModal(taskId, focusDoubt = false) {
+      activeModalTaskId = taskId;
+      const task = tasksData.find(t => t.id === taskId);
+      if (!task) return;
+
+      document.getElementById('modal-clarity-title').innerText = task.title;
+      document.getElementById('modal-clarity-priority').innerText = task.priority;
+      document.getElementById('modal-clarity-deadline').innerText = task.deadlineBadge;
+      document.getElementById('modal-clarity-outcome').innerText = task.expectedOutcome;
+
+      renderModalInstructions(task);
+
+      const resContainer = document.getElementById('modal-clarity-resources');
+      if (resContainer) {
+        resContainer.innerHTML = (task.resources || ['Specification sheet']).map(res => `
+          <span class="px-2.5 py-1 rounded-lg bg-neutral-100 border border-neutral-200 font-semibold text-neutral-700 flex items-center gap-1.5 hover:bg-neutral-200 cursor-pointer">
+            <svg class="w-3 h-3 text-neutral-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            ${res}
+          </span>
+        `).join('');
+      }
+
+      const badge = document.getElementById('modal-clarity-state-badge');
+      if (badge) {
+        badge.innerText = task.status.toUpperCase();
+        if (task.status === 'completed') badge.className = "px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-900";
+        else if (task.status === 'ongoing') badge.className = "px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900";
+        else badge.className = "px-2.5 py-1 rounded-full text-xs font-extrabold bg-neutral-100 text-neutral-800";
+      }
+
+      const modal = document.getElementById('clarity-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      if (focusDoubt) {
+        setTimeout(() => {
+          document.getElementById('modal-task-doubt-input').focus();
+        }, 100);
+      }
+    }
+
+    function renderModalInstructions(task) {
+      const insList = document.getElementById('modal-clarity-instructions');
+      if (!insList) return;
+
+      const doneCount = task.instructions.filter(i => i.done).length;
+      const prog = document.getElementById('modal-subtasks-progress');
+      if (prog) prog.innerText = `${doneCount} of ${task.instructions.length} completed`;
+
+      insList.innerHTML = task.instructions.map((item, idx) => `
+        <li class="flex items-start gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200/80 hover:bg-neutral-100/70 transition-all">
+          <input type="checkbox" onchange="toggleSubtask('${task.id}', ${idx}, this.checked)" ${item.done ? 'checked' : ''} class="mt-0.5 w-4 h-4 rounded text-amber-500 border-neutral-300 focus:ring-amber-400 cursor-pointer">
+          <span class="leading-relaxed ${item.done ? 'line-through text-neutral-400' : 'text-neutral-800 font-medium'} flex-1">${item.text}</span>
+        </li>
+      `).join('');
+    }
+
+    function toggleSubtask(taskId, subtaskIdx, isChecked) {
+      const task = tasksData.find(t => t.id === taskId);
+      if (!task || !task.instructions[subtaskIdx]) return;
+
+      task.instructions[subtaskIdx].done = isChecked;
+      renderModalInstructions(task);
+      renderTasks();
+      showToast(isChecked ? "Step checked off!" : "Step reopened.");
+    }
+
+    function closeClarityModal() {
+      const modal = document.getElementById('clarity-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Submit Doubt from Task Modal
+    function submitTaskDoubtFromModal() {
+      const input = document.getElementById('modal-task-doubt-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const task = tasksData.find(t => t.id === activeModalTaskId);
+      if (!task) return;
+
+      if (!task.doubts) task.doubts = [];
+      task.doubts.push({
+        sender: 'You',
+        time: 'Just now',
+        text: text
+      });
+
+      appendDoubtToFeed(task.title, text);
+      input.value = '';
+
+      showToast(`Doubt sent to Alex Rivera on "${task.title}"!`, 'success');
+      closeClarityModal();
+    }
+
+    // Doubts Feed Render & Add
+    function renderDoubtsFeed() {
+      const list = document.getElementById('doubts-feed-list');
+      if (!list) return;
+
+      const countLabel = document.getElementById('doubts-count-label');
+      if (countLabel) countLabel.innerText = globalDoubtsList.length;
+
+      list.innerHTML = globalDoubtsList.map(item => `
+        <div class="p-2.5 rounded-xl bg-neutral-50 border border-neutral-200/80 space-y-1 hover:bg-neutral-100/60 transition-colors">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-neutral-900 truncate max-w-[180px]">${item.taskTitle}</span>
+            <span class="text-neutral-400">${item.time}</span>
+          </div>
+          <p class="text-neutral-600 text-xs">"${item.question}"</p>
+          <div class="text-[11px] text-amber-900 font-semibold bg-amber-50/90 px-2 py-1 rounded-lg border border-amber-200/50">
+            <strong>Alex:</strong> ${item.answer}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function appendDoubtToFeed(taskTitle, doubtText) {
+      globalDoubtsList.unshift({
+        id: 'd_' + Date.now(),
+        taskTitle: taskTitle,
+        question: doubtText,
+        answer: 'Received! Reviewing acceptance criteria and will clarify before 3:30 PM sync. 👍',
+        time: 'Just now'
+      });
+      renderDoubtsFeed();
+    }
+
+    function fillDoubt(txt) {
+      document.getElementById('quick-doubt-input').value = txt;
+    }
+
+    function submitQuickDoubt() {
+      const input = document.getElementById('quick-doubt-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendDoubtToFeed('General Workday Alignment', text);
+      input.value = '';
+      showToast('Doubt added to 1:1 Sync Agenda!', 'success');
+    }
+
+    // New Task Modal Handlers
+    function openNewTaskModal() {
+      document.getElementById('new-task-modal').classList.remove('hidden');
+      document.getElementById('new-task-modal').classList.add('flex');
+    }
+    function closeNewTaskModal() {
+      document.getElementById('new-task-modal').classList.add('hidden');
+      document.getElementById('new-task-modal').classList.remove('flex');
+    }
+
+    function submitNewTaskModal() {
+      const title = document.getElementById('new-task-input-title').value.trim();
+      if (!title) { showToast('Please enter a task title', 'info'); return; }
+
+      const priority = document.getElementById('new-task-input-priority').value;
+      const due = document.getElementById('new-task-input-due').value || 'Today 5:00 PM';
+      const outcome = document.getElementById('new-task-input-outcome').value || 'Deliverable ready for team review.';
+      const instructions = document.getElementById('new-task-input-instructions').value || 'Follow standard acceptance criteria.';
+
+      const newTask = {
+        id: 'task-' + Date.now(),
+        title: title,
+        priority: priority,
+        priorityClass: priority.includes('P1') ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-amber-100/70 text-amber-900 border-amber-200',
+        status: 'ongoing',
+        dueTime: due,
+        deadlineBadge: 'Due Today',
+        timeEstimate: 'Est. 30 min',
+        expectedOutcome: outcome,
+        instructions: [{ text: instructions, done: false }],
+        resources: ['Team Workspace'],
+        doubts: []
+      };
+
+      tasksData.unshift(newTask);
+      closeNewTaskModal();
+      renderTasks();
+      showToast('New task added with clear expected outcome!', 'success');
+    }
+
+    function handleQuickAddTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('quick-task-title');
+      const title = input.value.trim();
+      if (!title) return;
+
+      const priority = document.getElementById('quick-task-priority').value;
+
+      tasksData.unshift({
+        id: 'task-' + Date.now(),
+        title: title,
+        priority: priority,
+        priorityClass: priority.includes('P1') ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-amber-100/70 text-amber-900 border-amber-200',
+        status: 'ongoing',
+        dueTime: 'Today 5:00 PM',
+        deadlineBadge: 'Due Today',
+        timeEstimate: 'Est. 30 min',
+        expectedOutcome: 'Deliverable complete according to team specification.',
+        instructions: [{ text: 'Review criteria with manager during 1:1 if needed.', done: false }],
+        resources: ['General Task Doc'],
+        doubts: []
+      });
+
+      input.value = '';
+      renderTasks();
+      showToast('Quick focus task added!', 'success');
+    }
+
+    // Manager View Unblock Modal (No more ugly prompts!)
+    function openUnblockModal(name, topic) {
+      document.getElementById('unblock-modal-subtitle').innerText = `${name} · ${topic} Blocker`;
+      document.getElementById('unblock-modal').classList.remove('hidden');
+      document.getElementById('unblock-modal').classList.add('flex');
+    }
+    function closeUnblockModal() {
+      document.getElementById('unblock-modal').classList.add('hidden');
+      document.getElementById('unblock-modal').classList.remove('flex');
+    }
+    function setUnblockPreset(txt) {
+      document.getElementById('unblock-guidance-text').value = txt;
+    }
+    function confirmUnblockTeammate() {
+      const guidance = document.getElementById('unblock-guidance-text').value;
+      isAlexChenBlocked = false;
+
+      // Update Manager UI for Alex Chen
+      const tag = document.getElementById('mgr-alex-status-tag');
+      if (tag) {
+        tag.className = "px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold";
+        tag.innerText = "✅ Unblocked & Testing";
+      }
+
+      const btn = document.getElementById('mgr-alex-unblock-btn');
+      if (btn) {
+        btn.className = "text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl";
+        btn.innerText = "✓ Guidance Sent";
+      }
+
+      const barBlocked = document.getElementById('mgr-alex-bar-blocked');
+      const barDone = document.getElementById('mgr-alex-bar-done');
+      if (barBlocked && barDone) {
+        barDone.style.width = "75%";
+        barBlocked.style.width = "25%";
+        barBlocked.className = "bg-amber-400 h-full transition-all";
+      }
+
+      // Update Employee Squad View for Alex Chen
+      const squadAlex = document.getElementById('squad-badge-alex');
+      if (squadAlex) {
+        squadAlex.className = "px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]";
+        squadAlex.innerText = "Unblocked & Testing";
+      }
+
+      // Update Velocity
+      const vel = document.getElementById('squad-velocity-label');
+      if (vel) vel.innerText = "100% On Track";
+
+      closeUnblockModal();
+      showToast("Guidance dispatched to Alex Chen. Blocker resolved!", "success");
+    }
+
+    // Teammate Inspect Drawer (Manager View)
+    function openEmployeeDetailModal(name, role) {
+      document.getElementById('inspect-name').innerText = name;
+      document.getElementById('inspect-role').innerText = role;
+
+      const avatar = document.getElementById('inspect-avatar');
+      avatar.innerText = name.split(' ').map(n => n[0]).join('');
+
+      const list = document.getElementById('inspect-task-list');
+      if (!list) return;
+
+      if (name.includes('Anna')) {
+        list.innerHTML = tasksData.slice(0, 4).map(t => `
+          <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200 flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md border uppercase ${t.priorityClass}">${t.priority}</span>
+                <span class="font-bold text-neutral-900 text-xs">${t.title}</span>
+              </div>
+              <p class="text-[11px] text-neutral-500 mt-1 font-medium">${t.expectedOutcome}</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${t.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}">${t.status.toUpperCase()}</span>
+          </div>
+        `).join('');
+      } else {
+        list.innerHTML = `
+          <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md border bg-amber-100 text-amber-900">P2 · ESSENTIAL</span>
+              <span class="font-bold text-neutral-900 text-xs ml-2">Sprint Deliverable Review</span>
+              <p class="text-[11px] text-neutral-500 mt-1">Verified with lead specifications.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">ON TRACK</span>
+          </div>
+        `;
+      }
+
+      document.getElementById('teammate-inspect-modal').classList.remove('hidden');
+      document.getElementById('teammate-inspect-modal').classList.add('flex');
+    }
+
+    function closeTeammateInspectModal() {
+      document.getElementById('teammate-inspect-modal').classList.add('hidden');
+      document.getElementById('teammate-inspect-modal').classList.remove('flex');
+    }
+
+    function sendManagerFeedback() {
+      const input = document.getElementById('inspect-feedback-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = '';
+      showToast("Note sent to employee and saved to 1:1 agenda!", "success");
+      closeTeammateInspectModal();
+    }
+
+    function inspectTeammate(name, role, task, details, status) {
+      openEmployeeDetailModal(name, role);
+    }
+
+    function resolveAlexDoubt() {
+      const reply = document.getElementById('alex-reply-input').value.trim() || 'Use standard authorization code flow with PKCE.';
+      const card = document.getElementById('alex-doubt-card');
+      card.innerHTML = `
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1">
+          <div class="flex items-center justify-between text-[11px] font-bold text-emerald-900">
+            <span>✓ Guidance Dispatched to Alex Chen</span>
+            <span>Just now</span>
+          </div>
+          <p class="text-xs text-emerald-800 font-medium">"${reply}"</p>
+          <span class="text-[10px] text-emerald-600 font-semibold block">Alex Chen is unblocked and notified.</span>
+        </div>
+      `;
+      const counter = document.getElementById('mgr-inbox-counter');
+      if (counter) {
+        counter.innerText = "All Resolved";
+        counter.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+      }
+      showToast("Reply sent to Alex Chen!", "success");
+    }
+
+    function setMood(btn, mood) {
+      document.querySelectorAll('.mood-pill').forEach(b => {
+        b.className = "mood-pill px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 hover:bg-neutral-100 flex items-center gap-1.5 transition-all";
+      });
+      btn.className = "mood-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-neutral-950 shadow-xs flex items-center gap-1.5 transition-all";
+      showToast(`Workday vibe updated to "${mood}"`, 'info');
+    }
+
+    // Initialize state
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTasks();
+      renderDoubtsFeed();
+    });
+  </script>
+</body>
+</html>
